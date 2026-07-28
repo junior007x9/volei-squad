@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { Calendar, Users, Receipt, ArrowRight, Activity, PlusCircle, Settings, Ticket, Eye, Copy, CheckCircle } from "lucide-react";
+import { Calendar, Users, Receipt, ArrowRight, Activity, PlusCircle, Settings, Ticket, Eye, Copy, CheckCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { buscarUltimoJogo } from "./actions/jogo";
@@ -60,112 +60,174 @@ export default function Home() {
     : 0;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-6 md:p-12 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 md:p-12 relative overflow-hidden perspective-1000">
       
-      {/* Efeitos visuais de fundo */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Efeitos 3D Imersivos de Fundo (Bolas de Vôlei Flutuantes com Rotação) */}
+      <motion.div 
+        animate={{ 
+          y: [0, -30, 0], 
+          rotateX: [0, 360], 
+          rotateY: [0, 360],
+          scale: [1, 1.05, 1] 
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-12 right-10 w-32 h-32 bg-gradient-to-tr from-blue-500/20 to-green-400/20 rounded-full blur-xl pointer-events-none border border-white/10 flex items-center justify-center text-4xl shadow-[0_0_50px_rgba(59,130,246,0.3)]"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        🏐
+      </motion.div>
 
-      {/* Cabeçalho Animado */}
+      <motion.div 
+        animate={{ 
+          y: [0, 25, 0], 
+          rotateZ: [0, -180, 0],
+          x: [0, 20, 0]
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-20 left-10 w-24 h-24 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full blur-lg pointer-events-none border border-white/5 flex items-center justify-center text-3xl shadow-[0_0_40px_rgba(168,85,247,0.3)]"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        🏐
+      </motion.div>
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+      {/* Cabeçalho Animado com Efeito 3D Hover */}
       <motion.header 
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, type: "spring" }}
+        initial={{ opacity: 0, y: -50, rotateX: -20 }}
+        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+        transition={{ duration: 0.6, type: "spring" }}
         className="flex items-center justify-between mb-8 relative z-10"
+        style={{ transformStyle: "preserve-3d" }}
       >
         <div>
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 flex items-center gap-3">
+          <motion.h1 
+            whileHover={{ scale: 1.02, rotateZ: 1 }}
+            className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 flex items-center gap-3 drop-shadow-[0_5px_15px_rgba(59,130,246,0.4)]"
+          >
             🏐 Vôlei Squad
-          </h1>
-          <p className="text-slate-400 mt-1">Organize os jogos, a galera e o pix!</p>
+          </motion.h1>
+          <p className="text-slate-400 mt-1 font-medium">Organize os jogos, a galera e o pix com estilo!</p>
         </div>
         
-        <div className="hidden md:flex h-12 w-12 rounded-full bg-white/10 items-center justify-center border border-white/20 shadow-[0_0_15px_rgba(74,222,128,0.3)]">
-          <span className="text-xl font-bold">VS</span>
-        </div>
+        <motion.div 
+          whileHover={{ scale: 1.15, rotateZ: 360 }}
+          transition={{ type: "spring", stiffness: 300 }}
+          className="hidden md:flex h-14 w-14 rounded-2xl bg-gradient-to-tr from-green-500/20 to-blue-500/20 items-center justify-center border border-white/30 shadow-[0_0_25px_rgba(74,222,128,0.4)] backdrop-blur-md cursor-pointer"
+        >
+          <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">VS</span>
+        </motion.div>
       </motion.header>
 
-      {/* --- BANNER ESPECIAL DE COMPARTILHAMENTO PARA O GRUPO --- */}
+      {/* --- BANNER ESPECIAL DE COMPARTILHAMENTO COM PULSO 3D --- */}
       {jogo && (
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="mb-8 bg-gradient-to-r from-blue-600/30 via-indigo-600/30 to-purple-600/30 border border-blue-400/30 backdrop-blur-xl p-6 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6"
+          initial={{ opacity: 0, scale: 0.9, z: -50 }}
+          animate={{ opacity: 1, scale: 1, z: 0 }}
+          transition={{ duration: 0.5, type: "spring" }}
+          whileHover={{ scale: 1.01, boxShadow: "0 0 35px rgba(59,130,246,0.4)" }}
+          className="mb-8 bg-gradient-to-r from-blue-600/30 via-indigo-600/30 to-purple-600/30 border border-blue-400/40 backdrop-blur-2xl p-6 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 z-10"
+          style={{ transformStyle: "preserve-3d" }}
         >
-          <div className="absolute -right-10 -bottom-10 bg-blue-400/20 w-40 h-40 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="absolute -right-10 -bottom-10 bg-blue-400/30 w-40 h-40 rounded-full blur-3xl pointer-events-none"></div>
           
           <div className="space-y-1 text-center md:text-left relative z-10">
-            <span className="bg-blue-500/30 text-blue-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2">
+            <span className="bg-blue-500/30 text-blue-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2 border border-blue-400/20">
               Link para o Grupo 🚀
             </span>
-            <h2 className="text-2xl font-bold text-white">Compartilhe o Acompanhamento do Vôlei</h2>
+            <h2 className="text-2xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
+              <Sparkles className="text-amber-400 animate-pulse" size={22} /> Compartilhe o Acompanhamento do Vôlei
+            </h2>
             <p className="text-slate-300 text-sm">Mande no WhatsApp para a galera ver quem já está escalado e quem pagou!</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 relative z-10 w-full md:w-auto justify-center">
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={copiarLinkAcompanhamento}
-              className="flex-1 md:flex-initial bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all flex items-center justify-center gap-2"
+              className="flex-1 md:flex-initial bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all flex items-center justify-center gap-2 border border-blue-300/30"
             >
               {linkCopiado ? <CheckCircle size={18} className="text-green-300"/> : <Copy size={18}/>}
               {linkCopiado ? "Link Copiado!" : "Copiar Link do Grupo"}
-            </button>
+            </motion.button>
 
             <Link href={`/acompanhar/${jogo.id}`} target="_blank" className="flex-1 md:flex-initial">
-              <div className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-5 py-3.5 rounded-2xl transition-all flex items-center justify-center gap-2">
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-5 py-3.5 rounded-2xl transition-all flex items-center justify-center gap-2 backdrop-blur-md"
+              >
                 <Eye size={18} className="text-blue-300"/> Ver Tela
-              </div>
+              </motion.div>
             </Link>
           </div>
         </motion.div>
       )}
 
-      {/* --- AÇÕES RÁPIDAS --- */}
+      {/* --- AÇÕES RÁPIDAS COM EFEITO DE ELEVAÇÃO 3D --- */}
       <motion.section 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
         className="mb-10 relative z-10"
       >
-        <h2 className="text-lg font-bold text-slate-300 mb-4 uppercase tracking-wider">Ações Rápidas</h2>
-        <div className="flex flex-wrap gap-4">
+        <h2 className="text-lg font-bold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2">
+          ⚡ Ações Rápidas
+        </h2>
+        <div className="grid grid-cols-2 md:flex md:flex-wrap gap-4">
           
           <Link href="/novo-jogo" className="flex-1 min-w-[150px]">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
-              <PlusCircle size={24} className="text-white" />
-              <span className="font-bold text-sm">Criar Jogo</span>
-            </div>
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -5, rotateX: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-blue-600 to-blue-500 p-5 rounded-2xl shadow-xl flex flex-col items-center justify-center gap-2 transition-all border border-blue-400/30 cursor-pointer h-full"
+            >
+              <PlusCircle size={28} className="text-white drop-shadow-md" />
+              <span className="font-bold text-sm text-center">Criar Jogo</span>
+            </motion.div>
           </Link>
 
           <Link href="/jogadores" className="flex-1 min-w-[150px]">
-            <div className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
-              <Users size={24} className="text-white" />
-              <span className="font-bold text-sm">Elenco Geral</span>
-            </div>
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -5, rotateX: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-purple-600 to-purple-500 p-5 rounded-2xl shadow-xl flex flex-col items-center justify-center gap-2 transition-all border border-purple-400/30 cursor-pointer h-full"
+            >
+              <Users size={28} className="text-white drop-shadow-md" />
+              <span className="font-bold text-sm text-center">Elenco Geral</span>
+            </motion.div>
           </Link>
 
           {jogo && (
             <>
               <Link href={`/jogo/${jogo.id}`} className="flex-1 min-w-[150px]">
-                <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
-                  <Settings size={24} className="text-white" />
+                <motion.div 
+                  whileHover={{ scale: 1.05, y: -5, rotateX: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-emerald-600 to-emerald-500 p-5 rounded-2xl shadow-xl flex flex-col items-center justify-center gap-2 transition-all border border-emerald-400/30 cursor-pointer h-full"
+                >
+                  <Settings size={28} className="text-white drop-shadow-md" />
                   <span className="font-bold text-sm text-center">Painel Organizador</span>
-                </div>
+                </motion.div>
               </Link>
 
               <Link href={`/convite/${jogo.id}`} className="flex-1 min-w-[150px]">
-                <div className="bg-slate-800 border border-slate-600 hover:bg-slate-700 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
-                  <Ticket size={24} className="text-amber-400" />
+                <motion.div 
+                  whileHover={{ scale: 1.05, y: -5, rotateX: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-slate-800/80 backdrop-blur-md border border-slate-600 p-5 rounded-2xl shadow-xl flex flex-col items-center justify-center gap-2 transition-all cursor-pointer h-full"
+                >
+                  <Ticket size={28} className="text-amber-400 drop-shadow-md" />
                   <span className="font-bold text-sm text-center">Ver Inscrição</span>
-                </div>
+                </motion.div>
               </Link>
             </>
           )}
         </div>
       </motion.section>
 
-      {/* Grid de Cards (Dashboard Resumo) */}
+      {/* Grid de Cards (Dashboard Resumo com Efeito Tilt/Hover 3D) */}
       <motion.div 
         variants={container}
         initial="hidden"
@@ -178,13 +240,18 @@ export default function Home() {
           <div className="bg-white/5 animate-pulse rounded-2xl h-48 border border-white/5"></div>
         ) : jogo ? (
           <Link href={`/jogo/${jogo.id}`} className="block h-full">
-            <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer h-full flex flex-col justify-between">
+            <motion.div 
+              variants={item} 
+              whileHover={{ scale: 1.03, rotateX: 2, rotateY: -2, z: 20 }}
+              className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl cursor-pointer h-full flex flex-col justify-between transition-all"
+              style={{ transformStyle: "preserve-3d" }}
+            >
               <div>
                 <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 bg-blue-500/20 rounded-lg text-blue-400">
+                  <div className="p-3 bg-blue-500/20 rounded-2xl text-blue-400 border border-blue-400/20 shadow-inner">
                     <Calendar size={28} />
                   </div>
-                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-green-500/20">
                     Em Aberto
                   </span>
                 </div>
@@ -197,7 +264,7 @@ export default function Home() {
             </motion.div>
           </Link>
         ) : (
-          <motion.div variants={item} className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
+          <motion.div variants={item} className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
             <Activity size={32} className="text-slate-500 mb-2"/>
             <p className="text-slate-400">Nenhum jogo agendado.</p>
           </motion.div>
@@ -208,11 +275,16 @@ export default function Home() {
           <div className="bg-white/5 animate-pulse rounded-2xl h-48 border border-white/5"></div>
         ) : jogo ? (
           <Link href={`/jogo/${jogo.id}`} className="block h-full">
-            <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer relative overflow-hidden h-full flex flex-col justify-between">
+            <motion.div 
+              variants={item} 
+              whileHover={{ scale: 1.03, rotateX: 2, rotateY: -2, z: 20 }}
+              className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl cursor-pointer relative overflow-hidden h-full flex flex-col justify-between transition-all"
+              style={{ transformStyle: "preserve-3d" }}
+            >
               <div className="absolute -right-10 -top-10 bg-green-500/20 w-32 h-32 rounded-full blur-3xl"></div>
               
               <div>
-                <div className="p-3 bg-green-500/20 w-max rounded-lg text-green-400 mb-4 relative z-10">
+                <div className="p-3 bg-green-500/20 w-max rounded-2xl text-green-400 mb-4 relative z-10 border border-green-500/20 shadow-inner">
                   <Receipt size={28} />
                 </div>
                 <h2 className="text-2xl font-bold mb-1">R$ {jogo.valor_total.toFixed(2)}</h2>
@@ -220,12 +292,12 @@ export default function Home() {
                   {estatisticas.pagos} de {estatisticas.total} pagaram
                 </p>
                 
-                <div className="w-full bg-slate-700 rounded-full h-2.5 mb-4">
+                <div className="w-full bg-slate-800 rounded-full h-3 mb-4 overflow-hidden border border-white/10">
                   <motion.div 
                     initial={{ width: 0 }} 
                     animate={{ width: `${porcentagemPaga}%` }} 
                     transition={{ delay: 0.5, duration: 1 }}
-                    className="bg-green-500 h-2.5 rounded-full"
+                    className="bg-gradient-to-r from-green-400 to-emerald-500 h-full rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)]"
                   ></motion.div>
                 </div>
               </div>
@@ -236,7 +308,7 @@ export default function Home() {
             </motion.div>
           </Link>
         ) : (
-          <motion.div variants={item} className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
+          <motion.div variants={item} className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
             <Receipt size={32} className="text-slate-500 mb-2"/>
             <p className="text-slate-400">Inicie um jogo para gerenciar o Pix.</p>
           </motion.div>
@@ -244,9 +316,14 @@ export default function Home() {
 
         {/* Card 3: Galera */}
         <Link href="/jogadores" className="block h-full">
-          <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer h-full flex flex-col justify-between">
+          <motion.div 
+            variants={item} 
+            whileHover={{ scale: 1.03, rotateX: 2, rotateY: -2, z: 20 }}
+            className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl cursor-pointer h-full flex flex-col justify-between transition-all"
+            style={{ transformStyle: "preserve-3d" }}
+          >
             <div>
-              <div className="p-3 bg-purple-500/20 w-max rounded-lg text-purple-400 mb-4">
+              <div className="p-3 bg-purple-500/20 w-max rounded-2xl text-purple-400 mb-4 border border-purple-500/20 shadow-inner">
                 <Users size={28} />
               </div>
               <h2 className="text-2xl font-bold mb-1">Elenco</h2>
@@ -254,11 +331,11 @@ export default function Home() {
               
               <div className="flex -space-x-4 mb-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-800 bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center font-bold text-xs">
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center font-bold text-xs shadow-md">
                     J{i}
                   </div>
                 ))}
-                <div className="w-10 h-10 rounded-full border-2 border-slate-800 bg-slate-700 flex items-center justify-center font-bold text-xs text-slate-300">
+                <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-300 shadow-md">
                   +
                 </div>
               </div>
