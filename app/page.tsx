@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { Calendar, Users, Receipt, ArrowRight, Activity, PlusCircle, Settings, Ticket, Link as LinkIcon } from "lucide-react";
+import { Calendar, Users, Receipt, ArrowRight, Activity, PlusCircle, Settings, Ticket, Eye, Copy, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { buscarUltimoJogo } from "./actions/jogo";
@@ -11,6 +11,7 @@ export default function Home() {
   const [jogo, setJogo] = useState<any>(null);
   const [estatisticas, setEstatisticas] = useState({ pagos: 0, total: 0 });
   const [carregando, setCarregando] = useState(true);
+  const [linkCopiado, setLinkCopiado] = useState(false);
 
   useEffect(() => {
     async function carregarDashboard() {
@@ -35,7 +36,15 @@ export default function Home() {
     carregarDashboard();
   }, []);
 
-  // Variantes de Animação COM TIPAGEM CORRIGIDA PARA O TYPESCRIPT
+  function copiarLinkAcompanhamento() {
+    if (!jogo) return;
+    const link = `${window.location.origin}/acompanhar/${jogo.id}`;
+    navigator.clipboard.writeText(link);
+    setLinkCopiado(true);
+    setTimeout(() => setLinkCopiado(false), 3000);
+  }
+
+  // Variantes de Animação com tipagem correta
   const container: Variants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.2 } }
@@ -51,14 +60,18 @@ export default function Home() {
     : 0;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-6 md:p-12">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-6 md:p-12 relative overflow-hidden">
       
+      {/* Efeitos visuais de fundo */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
       {/* Cabeçalho Animado */}
       <motion.header 
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, type: "spring" }}
-        className="flex items-center justify-between mb-8"
+        className="flex items-center justify-between mb-8 relative z-10"
       >
         <div>
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 flex items-center gap-3">
@@ -72,12 +85,48 @@ export default function Home() {
         </div>
       </motion.header>
 
-      {/* --- AÇÕES RÁPIDAS (TODOS OS BOTÕES AQUI) --- */}
+      {/* --- BANNER ESPECIAL DE COMPARTILHAMENTO PARA O GRUPO --- */}
+      {jogo && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8 bg-gradient-to-r from-blue-600/30 via-indigo-600/30 to-purple-600/30 border border-blue-400/30 backdrop-blur-xl p-6 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div className="absolute -right-10 -bottom-10 bg-blue-400/20 w-40 h-40 rounded-full blur-2xl pointer-events-none"></div>
+          
+          <div className="space-y-1 text-center md:text-left relative z-10">
+            <span className="bg-blue-500/30 text-blue-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2">
+              Link para o Grupo 🚀
+            </span>
+            <h2 className="text-2xl font-bold text-white">Compartilhe o Acompanhamento do Vôlei</h2>
+            <p className="text-slate-300 text-sm">Mande no WhatsApp para a galera ver quem já está escalado e quem pagou!</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 relative z-10 w-full md:w-auto justify-center">
+            <button 
+              onClick={copiarLinkAcompanhamento}
+              className="flex-1 md:flex-initial bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all flex items-center justify-center gap-2"
+            >
+              {linkCopiado ? <CheckCircle size={18} className="text-green-300"/> : <Copy size={18}/>}
+              {linkCopiado ? "Link Copiado!" : "Copiar Link do Grupo"}
+            </button>
+
+            <Link href={`/acompanhar/${jogo.id}`} target="_blank" className="flex-1 md:flex-initial">
+              <div className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-5 py-3.5 rounded-2xl transition-all flex items-center justify-center gap-2">
+                <Eye size={18} className="text-blue-300"/> Ver Tela
+              </div>
+            </Link>
+          </div>
+        </motion.div>
+      )}
+
+      {/* --- AÇÕES RÁPIDAS --- */}
       <motion.section 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="mb-10"
+        className="mb-10 relative z-10"
       >
         <h2 className="text-lg font-bold text-slate-300 mb-4 uppercase tracking-wider">Ações Rápidas</h2>
         <div className="flex flex-wrap gap-4">
@@ -108,7 +157,7 @@ export default function Home() {
               <Link href={`/convite/${jogo.id}`} className="flex-1 min-w-[150px]">
                 <div className="bg-slate-800 border border-slate-600 hover:bg-slate-700 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
                   <Ticket size={24} className="text-amber-400" />
-                  <span className="font-bold text-sm text-center">Ver Convite Público</span>
+                  <span className="font-bold text-sm text-center">Ver Inscrição</span>
                 </div>
               </Link>
             </>
@@ -121,7 +170,7 @@ export default function Home() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10"
       >
         
         {/* Card 1: Próximo Jogo */}
@@ -193,7 +242,7 @@ export default function Home() {
           </motion.div>
         )}
 
-        {/* Card 3: Galera (Leva para Lista Geral) */}
+        {/* Card 3: Galera */}
         <Link href="/jogadores" className="block h-full">
           <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer h-full flex flex-col justify-between">
             <div>
