@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { MapPin, Calendar, CheckCircle, MessageSquare, Timer, User, Phone } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { buscarJogoPorId } from "../../../actions/jogo";
-import { confirmarConvitePublico } from "../../../actions/pagamento";
+import { buscarJogoPorId } from "../../actions/jogo";
+import { confirmarConvitePublico } from "../../actions/pagamento";
 
 export default function ConvitePublico() {
   const params = useParams();
