@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Calendar, Users, Receipt, ArrowRight, Activity, PlusCircle, Settings, Ticket, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -35,12 +35,13 @@ export default function Home() {
     carregarDashboard();
   }, []);
 
-  // Variantes de Animação
-  const container = {
+  // Variantes de Animação COM TIPAGEM CORRIGIDA PARA O TYPESCRIPT
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
-  const item = {
+  
+  const item: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300 } }
   };
