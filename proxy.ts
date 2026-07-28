@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
   // Define quais rotas não precisam de senha
@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configuração para o guardião ignorar arquivos de imagem, ícones e código interno
+// Configuração para o proxy ignorar arquivos de imagem, ícones e código interno
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)'],
 };
