@@ -3,21 +3,27 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, CalendarDays, Clock, MapPin, DollarSign, Timer } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { criarJogo } from "../actions/jogo";
 
 export default function NovoJogo() {
+  const [valorHora, setValorHora] = useState<number>(55);
+  const [duracao, setDuracao] = useState<number>(2);
+
+  const valorTotalCalculado = valorHora * duracao;
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-6 md:p-12 flex flex-col items-center justify-center">
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 md:p-12 flex flex-col items-center justify-center relative overflow-hidden">
       
+      <div className="absolute -top-20 -left-20 bg-blue-500/20 w-40 h-40 rounded-full blur-3xl pointer-events-none"></div>
+
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 300 }}
-        className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl relative overflow-hidden"
+        className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-3xl shadow-2xl relative z-10"
       >
-        <div className="absolute -top-20 -left-20 bg-blue-500/30 w-40 h-40 rounded-full blur-3xl"></div>
-
-        <div className="flex items-center gap-4 mb-8 relative z-10">
+        <div className="flex items-center gap-4 mb-8">
           <Link href="/" className="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors text-slate-300 hover:text-white">
             <ArrowLeft size={24} />
           </Link>
@@ -26,20 +32,20 @@ export default function NovoJogo() {
           </h1>
         </div>
 
-        <form action={criarJogo} className="space-y-5 relative z-10">
+        <form action={criarJogo} className="space-y-5">
           
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-semibold text-slate-300 mb-1 flex items-center gap-2">
                 <CalendarDays size={16} className="text-blue-400"/> Data
               </label>
-              <input type="date" name="data" required className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="date" name="data" required className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
               <label className="text-sm font-semibold text-slate-300 mb-1 flex items-center gap-2">
                 <Clock size={16} className="text-blue-400"/> Início
               </label>
-              <input type="time" name="horario" required className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="time" name="horario" required className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
 
@@ -47,29 +53,52 @@ export default function NovoJogo() {
             <label className="text-sm font-semibold text-slate-300 mb-1 flex items-center gap-2">
               <MapPin size={16} className="text-blue-400"/> Local da Quadra
             </label>
-            <input type="text" name="local" placeholder="Ex: Arena Beach" required className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-500" />
+            <input type="text" name="local" placeholder="Ex: Arena Beach" required className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-500" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-semibold text-slate-300 mb-1 flex items-center gap-2">
-                <Timer size={16} className="text-amber-400"/> Duração (Horas)
+                <DollarSign size={16} className="text-green-400"/> Valor da Hora (R$)
               </label>
-              <input type="number" name="duracao" step="0.5" min="0.5" defaultValue="2" required className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              <input 
+                type="number" 
+                name="valor_hora" 
+                step="0.01" 
+                value={valorHora}
+                onChange={(e) => setValorHora(parseFloat(e.target.value) || 0)}
+                required 
+                className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500" 
+              />
             </div>
             <div>
               <label className="text-sm font-semibold text-slate-300 mb-1 flex items-center gap-2">
-                <DollarSign size={16} className="text-green-400"/> Valor Total (R$)
+                <Timer size={16} className="text-amber-400"/> Duração (Horas)
               </label>
-              <input type="number" name="valor" step="0.01" placeholder="120.00" required className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-slate-500" />
+              <input 
+                type="number" 
+                name="duracao" 
+                step="0.5" 
+                min="0.5" 
+                value={duracao}
+                onChange={(e) => setDuracao(parseFloat(e.target.value) || 0)}
+                required 
+                className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
             </div>
+          </div>
+
+          {/* Prévia automática do valor total */}
+          <div className="bg-slate-900/60 border border-white/10 p-4 rounded-2xl flex items-center justify-between">
+            <span className="text-sm text-slate-400 font-medium">Valor Total da Quadra:</span>
+            <span className="text-xl font-bold text-green-400">R$ {valorTotalCalculado.toFixed(2)}</span>
           </div>
 
           <motion.button 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="w-full mt-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold text-lg py-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.4)] hover:shadow-[0_0_25px_rgba(74,222,128,0.6)] transition-all"
+            className="w-full mt-2 bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold text-lg py-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all"
           >
             Confirmar Jogo 🏐
           </motion.button>

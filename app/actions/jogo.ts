@@ -8,14 +8,17 @@ export async function criarJogo(formData: FormData) {
   const data = formData.get("data") as string;
   const horario = formData.get("horario") as string;
   const local = formData.get("local") as string;
-  const valor = parseFloat(formData.get("valor") as string);
-  const duracao = parseFloat(formData.get("duracao") as string) || 2; // Padrão 2 horas
+  const valor_hora = parseFloat(formData.get("valor_hora") as string) || 0;
+  const duracao = parseFloat(formData.get("duracao") as string) || 2;
+  
+  // O sistema calcula automaticamente o valor total da quadra
+  const valor_total = valor_hora * duracao;
   
   const id = crypto.randomUUID();
 
   await turso.execute({
-    sql: "INSERT INTO jogos (id, data, horario, local, valor_total, duracao_horas) VALUES (?, ?, ?, ?, ?, ?)",
-    args: [id, data, horario, local, valor, duracao],
+    sql: "INSERT INTO jogos (id, data, horario, local, valor_total, duracao_horas, valor_hora) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    args: [id, data, horario, local, valor_total, duracao, valor_hora],
   });
 
   revalidatePath("/");
