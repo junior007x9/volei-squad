@@ -1,65 +1,226 @@
-import Image from "next/image";
+"use client";
+
+import { motion } from "framer-motion";
+import { Calendar, Users, Receipt, ArrowRight, Activity, PlusCircle, Settings, Ticket, Link as LinkIcon } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { buscarUltimoJogo } from "./actions/jogo";
+import { buscarParticipantes } from "./actions/pagamento";
 
 export default function Home() {
+  const [jogo, setJogo] = useState<any>(null);
+  const [estatisticas, setEstatisticas] = useState({ pagos: 0, total: 0 });
+  const [carregando, setCarregando] = useState(true);
+
+  useEffect(() => {
+    async function carregarDashboard() {
+      try {
+        const ultimoJogo = await buscarUltimoJogo();
+        if (ultimoJogo) {
+          setJogo(ultimoJogo);
+          const participantes = await buscarParticipantes(ultimoJogo.id);
+          
+          const pagamentosConfirmados = participantes.filter((p: any) => p.status === 'Confirmado').length;
+          setEstatisticas({ 
+            pagos: pagamentosConfirmados, 
+            total: participantes.length 
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados", error);
+      } finally {
+        setCarregando(false);
+      }
+    }
+    carregarDashboard();
+  }, []);
+
+  // Variantes de Animação
+  const container = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.2 } }
+  };
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300 } }
+  };
+
+  const porcentagemPaga = estatisticas.total > 0 
+    ? (estatisticas.pagos / estatisticas.total) * 100 
+    : 0;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-6 md:p-12">
+      
+      {/* Cabeçalho Animado */}
+      <motion.header 
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, type: "spring" }}
+        className="flex items-center justify-between mb-8"
+      >
+        <div>
+          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 flex items-center gap-3">
+            🏐 Vôlei Squad
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+          <p className="text-slate-400 mt-1">Organize os jogos, a galera e o pix!</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        <div className="hidden md:flex h-12 w-12 rounded-full bg-white/10 items-center justify-center border border-white/20 shadow-[0_0_15px_rgba(74,222,128,0.3)]">
+          <span className="text-xl font-bold">VS</span>
         </div>
-      </main>
-    </div>
+      </motion.header>
+
+      {/* --- AÇÕES RÁPIDAS (TODOS OS BOTÕES AQUI) --- */}
+      <motion.section 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="mb-10"
+      >
+        <h2 className="text-lg font-bold text-slate-300 mb-4 uppercase tracking-wider">Ações Rápidas</h2>
+        <div className="flex flex-wrap gap-4">
+          
+          <Link href="/novo-jogo" className="flex-1 min-w-[150px]">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
+              <PlusCircle size={24} className="text-white" />
+              <span className="font-bold text-sm">Criar Jogo</span>
+            </div>
+          </Link>
+
+          <Link href="/jogadores" className="flex-1 min-w-[150px]">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
+              <Users size={24} className="text-white" />
+              <span className="font-bold text-sm">Elenco Geral</span>
+            </div>
+          </Link>
+
+          {jogo && (
+            <>
+              <Link href={`/jogo/${jogo.id}`} className="flex-1 min-w-[150px]">
+                <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
+                  <Settings size={24} className="text-white" />
+                  <span className="font-bold text-sm text-center">Painel Organizador</span>
+                </div>
+              </Link>
+
+              <Link href={`/convite/${jogo.id}`} className="flex-1 min-w-[150px]">
+                <div className="bg-slate-800 border border-slate-600 hover:bg-slate-700 p-4 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-1">
+                  <Ticket size={24} className="text-amber-400" />
+                  <span className="font-bold text-sm text-center">Ver Convite Público</span>
+                </div>
+              </Link>
+            </>
+          )}
+        </div>
+      </motion.section>
+
+      {/* Grid de Cards (Dashboard Resumo) */}
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
+        
+        {/* Card 1: Próximo Jogo */}
+        {carregando ? (
+          <div className="bg-white/5 animate-pulse rounded-2xl h-48 border border-white/5"></div>
+        ) : jogo ? (
+          <Link href={`/jogo/${jogo.id}`} className="block h-full">
+            <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer h-full flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 bg-blue-500/20 rounded-lg text-blue-400">
+                    <Calendar size={28} />
+                  </div>
+                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    Em Aberto
+                  </span>
+                </div>
+                <h2 className="text-2xl font-bold mb-1">{jogo.data} às {jogo.horario}</h2>
+                <p className="text-slate-300 text-sm mb-4">{jogo.local}</p>
+              </div>
+              <div className="flex items-center text-blue-400 font-semibold text-sm hover:text-blue-300 transition-colors">
+                Gerenciar Partida <ArrowRight size={16} className="ml-2" />
+              </div>
+            </motion.div>
+          </Link>
+        ) : (
+          <motion.div variants={item} className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
+            <Activity size={32} className="text-slate-500 mb-2"/>
+            <p className="text-slate-400">Nenhum jogo agendado.</p>
+          </motion.div>
+        )}
+
+        {/* Card 2: Financeiro */}
+        {carregando ? (
+          <div className="bg-white/5 animate-pulse rounded-2xl h-48 border border-white/5"></div>
+        ) : jogo ? (
+          <Link href={`/jogo/${jogo.id}`} className="block h-full">
+            <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer relative overflow-hidden h-full flex flex-col justify-between">
+              <div className="absolute -right-10 -top-10 bg-green-500/20 w-32 h-32 rounded-full blur-3xl"></div>
+              
+              <div>
+                <div className="p-3 bg-green-500/20 w-max rounded-lg text-green-400 mb-4 relative z-10">
+                  <Receipt size={28} />
+                </div>
+                <h2 className="text-2xl font-bold mb-1">R$ {jogo.valor_total.toFixed(2)}</h2>
+                <p className="text-slate-300 text-sm mb-4">
+                  {estatisticas.pagos} de {estatisticas.total} pagaram
+                </p>
+                
+                <div className="w-full bg-slate-700 rounded-full h-2.5 mb-4">
+                  <motion.div 
+                    initial={{ width: 0 }} 
+                    animate={{ width: `${porcentagemPaga}%` }} 
+                    transition={{ delay: 0.5, duration: 1 }}
+                    className="bg-green-500 h-2.5 rounded-full"
+                  ></motion.div>
+                </div>
+              </div>
+              
+              <div className="flex items-center text-green-400 font-semibold text-sm">
+                Validar Comprovantes <ArrowRight size={16} className="ml-2" />
+              </div>
+            </motion.div>
+          </Link>
+        ) : (
+          <motion.div variants={item} className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
+            <Receipt size={32} className="text-slate-500 mb-2"/>
+            <p className="text-slate-400">Inicie um jogo para gerenciar o Pix.</p>
+          </motion.div>
+        )}
+
+        {/* Card 3: Galera (Leva para Lista Geral) */}
+        <Link href="/jogadores" className="block h-full">
+          <motion.div variants={item} whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl cursor-pointer h-full flex flex-col justify-between">
+            <div>
+              <div className="p-3 bg-purple-500/20 w-max rounded-lg text-purple-400 mb-4">
+                <Users size={28} />
+              </div>
+              <h2 className="text-2xl font-bold mb-1">Elenco</h2>
+              <p className="text-slate-300 text-sm mb-4">Gerencie seus amigos</p>
+              
+              <div className="flex -space-x-4 mb-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-800 bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center font-bold text-xs">
+                    J{i}
+                  </div>
+                ))}
+                <div className="w-10 h-10 rounded-full border-2 border-slate-800 bg-slate-700 flex items-center justify-center font-bold text-xs text-slate-300">
+                  +
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center text-purple-400 font-semibold text-sm">
+              Adicionar Jogadores <ArrowRight size={16} className="ml-2" />
+            </div>
+          </motion.div>
+        </Link>
+
+      </motion.div>
+    </main>
   );
 }
