@@ -4,8 +4,8 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
-  // Define quais rotas não precisam de senha
-  const isPublicRoute = path.startsWith('/convite') || path === '/login';
+  // Define quais rotas não precisam de senha (Convites, Acompanhamento e Login)
+  const isPublicRoute = path.startsWith('/convite') || path.startsWith('/acompanhar') || path === '/login';
 
   // Verifica se o carimbo (cookie) de organizador existe
   const isAuth = request.cookies.get('organizador_auth')?.value === 'logado';
@@ -23,7 +23,6 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configuração para o proxy ignorar arquivos de imagem, ícones e código interno
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)'],
 };
