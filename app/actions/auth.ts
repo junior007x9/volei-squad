@@ -13,8 +13,10 @@ export async function fazerLogin(formData: FormData) {
   });
 
   if (rows.length > 0) {
-    // Se a senha estiver correta, gera o carimbo de acesso válido por 30 dias
-    cookies().set("organizador_auth", "logado", { 
+    // Correção: Agora aguardamos os cookies carregarem com 'await'
+    const cookieStore = await cookies();
+    
+    cookieStore.set("organizador_auth", "logado", { 
       maxAge: 60 * 60 * 24 * 30, // 30 dias
       httpOnly: true,
       secure: process.env.NODE_ENV === "production"
@@ -27,6 +29,7 @@ export async function fazerLogin(formData: FormData) {
 }
 
 export async function fazerLogout() {
-  cookies().delete("organizador_auth");
+  const cookieStore = await cookies();
+  cookieStore.delete("organizador_auth");
   redirect("/login");
 }
